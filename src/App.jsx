@@ -1,4 +1,50 @@
 import { useState, useEffect, useRef } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import Play from './Play'
+
+// Typewriter Effect Component
+function TypewriterText({ words, className = '' }) {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
+  const [currentText, setCurrentText] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [typingSpeed, setTypingSpeed] = useState(75)
+
+  useEffect(() => {
+    const currentWord = words[currentWordIndex]
+    
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        // Typing forward
+        if (currentText.length < currentWord.length) {
+          setCurrentText(currentWord.substring(0, currentText.length + 1))
+          setTypingSpeed(75)
+        } else {
+          // Finished typing, wait then start deleting
+          setTimeout(() => setIsDeleting(true), 1000)
+        }
+      } else {
+        // Deleting backward
+        if (currentText.length > 0) {
+          setCurrentText(currentWord.substring(0, currentText.length - 1))
+          setTypingSpeed(75)
+        } else {
+          // Finished deleting, move to next word
+          setIsDeleting(false)
+          setCurrentWordIndex((prev) => (prev + 1) % words.length)
+        }
+      }
+    }, typingSpeed)
+
+    return () => clearTimeout(timer)
+  }, [currentText, isDeleting, currentWordIndex, words, typingSpeed])
+
+  return (
+    <span className={className}>
+      {currentText}
+      <span className="text-[#F4C76C] animate-pulse ml-1">|</span>
+    </span>
+  )
+}
 
 // Custom Game Mockup Component
 function GameMockup() {
@@ -55,7 +101,7 @@ function GameMockup() {
   )
 }
 
-function App() {
+function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
   const heroRef = useRef(null)
 
@@ -119,12 +165,12 @@ function App() {
               >
                 HOME
               </button>
-              <a
-                href="#play"
+              <Link
+                to="/play"
                 className="text-slate-400 hover:text-[#F4C76C] transition-colors text-sm tracking-wider uppercase font-mono focus:outline-none focus:text-[#F4C76C]"
               >
                 PLAY
-              </a>
+              </Link>
               <button
                 onClick={() => scrollToSection('how-it-works')}
                 className="glow-button bg-[#F4C76C] text-[#0a0a0a] px-6 py-2.5 text-sm font-bold tracking-wider uppercase font-mono border border-[#F4C76C] focus:outline-none"
@@ -154,17 +200,14 @@ function App() {
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             {/* Left: Headline - Asymmetric layout */}
             <div className="lg:col-span-7 space-y-8 content-layer">
-              <div className="fade-up">
-                <div className="inline-block mb-4 px-4 py-1.5 bg-[#F4C76C]/10 border border-[#F4C76C]/30 rounded-sm">
-                  <span className="text-xs tracking-[0.2em] uppercase text-[#F4C76C] font-mono">BOSS MODE ACTIVATED</span>
-                </div>
-              </div>
               
               <h1 className="display-font text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.9] fade-up fade-up-delay-1">
                 <span className="block text-slate-50">TURN YOUR</span>
                 <span className="block gold-accent">CLASS NOTES</span>
-                <span className="block text-slate-50">INTO A</span>
-                <span className="block gold-accent">BOSS-LEVEL</span>
+                <span className="block text-slate-50">INTO AN</span>
+                <span className="block gold-accent">
+                  <TypewriterText words={['Engaging', 'Exciting', 'Educational']} className="gold-accent" />
+                </span>
                 <span className="block text-slate-50">STUDY GAME</span>
               </h1>
               
@@ -173,12 +216,12 @@ function App() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 fade-up fade-up-delay-3">
-                <a
-                  href="/play"
+                <Link
+                  to="/play"
                   className="glow-button bg-[#F4C76C] text-[#0a0a0a] px-8 py-4 text-base font-bold tracking-wider uppercase font-mono border border-[#F4C76C] inline-block text-center focus:outline-none"
                 >
                   START PLAYING
-                </a>
+                </Link>
                 <button
                   onClick={() => scrollToSection('how-it-works')}
                   className="terminal-frame border-2 border-[#F4C76C]/50 text-[#F4C76C] hover:bg-[#F4C76C]/10 px-8 py-4 text-base font-bold tracking-wider uppercase font-mono transition-all focus:outline-none focus:border-[#F4C76C]"
@@ -386,12 +429,12 @@ function App() {
               <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto body-font leading-relaxed">
                 Paste your notes and generate your first boss battle in seconds.
               </p>
-              <a
-                href="/play"
+              <Link
+                to="/play"
                 className="glow-button bg-[#F4C76C] text-[#0a0a0a] px-12 py-5 text-lg font-bold tracking-wider uppercase font-mono border-2 border-[#F4C76C] inline-block focus:outline-none"
               >
                 GENERATE MY GAME
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -415,6 +458,17 @@ function App() {
         </div>
       </footer>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/play" element={<Play />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
