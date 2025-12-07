@@ -14,20 +14,15 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-import os
-
-# Vercel's filesystem is read-only except for /tmp
-UPLOAD_FOLDER = os.path.join("/tmp", "uploads")
-
+UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
 MAX_FILE_SIZE = 16 * 1024 * 1024  # 16MB
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
-# Create upload folder if it doesn't exist (this works because /tmp is writable)
+# Create upload folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -89,3 +84,4 @@ def health():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
