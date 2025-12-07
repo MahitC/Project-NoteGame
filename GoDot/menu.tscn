@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bgwwyrjvf4tat"]
+[gd_scene load_steps=8 format=3 uid="uid://bgwwyrjvf4tat"]
 
 [ext_resource type="Texture2D" uid="uid://bq48alco6avh4" path="res://ABSTRACT_WALLPAPER_Mesa_de_trabajo_1.jpg" id="1_lti8b"]
+[ext_resource type="Script" uid="uid://dss64vjw61r37" path="res://menu.gd" id="1_ouk20"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ouk20"]
 texture = ExtResource("1_lti8b")
@@ -39,6 +40,7 @@ offset_right = 1.0
 offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ouk20")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -49,7 +51,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ouk20")
 
-[node name="Button" type="Button" parent="."]
+[node name="Start" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -81,3 +83,5 @@ offset_bottom = 181.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 100
 text = "NoteQuest"
+
+[connection signal="pressed" from="Start" to="." method="_on_start_pressed"]

@@ -13,3 +13,7 @@ config_version=5
 config/name="NoteQuest"
 run/main_scene="res://menu.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
+
+[display]
+
+window/subwindows/embed_subwindows=false
